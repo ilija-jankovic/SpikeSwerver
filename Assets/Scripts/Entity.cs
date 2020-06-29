@@ -12,9 +12,6 @@ public abstract class Entity : MonoBehaviour
     protected virtual void Update()
     {
         if (transform.position.y < GameManager.MinHeight)
-        {
             Destroy(gameObject);
-            return;
-        }
     }
 }

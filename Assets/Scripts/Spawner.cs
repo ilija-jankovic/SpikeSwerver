@@ -9,7 +9,7 @@ public class Spawner : Entity
     [SerializeField]
     public float frequency;
 
-    private float time = -1f;
+    private float time = -3f;
     private float nextSpawn;
 
     protected override void Update()
@@ -19,7 +19,7 @@ public class Spawner : Entity
         {
             GameObject spike = Instantiate(Resources.Load(type) as GameObject);
 
-            GameObject plat = GameObject.Find("Platform");
+            GameObject plat = GameManager.Platform;
             Vector3 platPos = plat.transform.position;
             Vector3 platScl = plat.transform.localScale;
 

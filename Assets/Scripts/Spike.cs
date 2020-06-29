@@ -5,28 +5,34 @@ using UnityEngine;
 public abstract class Spike : Entity
 {
     [SerializeField]
-    private float /*speed,*/ _acceleration = 0.02f;
+    private float _acceleration = 0.02f;
     [SerializeField]
     protected byte value = 1;
+    private bool valueGiven; 
     protected override void Start()
     {
         base.Start();
         gameObject.AddComponent<Rigidbody>().AddForce(new Vector3(0,-Acceleration,0),ForceMode.Acceleration);
-        gameObject.AddComponent<MeshCollider>();
-        GetComponent<MeshCollider>().convex = true;
+        gameObject.AddComponent<BoxCollider>().isTrigger = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected override void Update()
     {
-        if (FindObjectOfType<Player>() && (collision.gameObject == GameObject.Find("Platform") || collision.gameObject.GetComponent<Player>() != null))
+        base.Update();
+        if (!valueGiven && GameManager.Player && transform.position.y <= GameManager.Platform.transform.position.y)
+        {
             GameManager.AddPoints(value);
-        CollisionEffects();
-        Destroy(gameObject);
+            valueGiven = true;
+        }
     }
 
-    protected virtual void CollisionEffects()
+    private void OnTriggerStay(Collider other)
     {
-
+        if (GameManager.Player && other.gameObject == GameManager.Player.gameObject)
+        {
+            GameManager.Player.Hit();
+            Destroy(gameObject);
+        }
     }
 
     protected float Acceleration

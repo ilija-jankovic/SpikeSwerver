@@ -9,9 +9,9 @@ public class Player : Entity
     private float speed = 0.03f;
     private byte lives = 3;
 
-    private Material mat;
+    Material mat;
 
-    private Color normalCol;
+    private readonly Color normalCol = Color.green;
     private readonly Color damagedCol = Color.red;
     private float colTransition = 1f;
 
@@ -22,18 +22,22 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        mat = Instantiate(GetComponent<MeshRenderer>().sharedMaterial);
-        GetComponent<MeshRenderer>().sharedMaterial = mat;
-        normalCol = mat.color;
+        mat = GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     protected override void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector2 pos = touch.position;
+            Move(pos.x >= Screen.width / 2 ? 'r' : 'l');
+        }
+        /*else if (Input.GetMouseButton(0))
         {
             Vector2 pos = Input.mousePosition;
             Move(pos.x >= Screen.width / 2 ? 'r' : 'l');
-        }
+        }*/
         else if (Input.anyKey)
             Move(Input.GetKey(KeyCode.RightArrow) ? 'r' : 'l');
         else
@@ -46,29 +50,26 @@ public class Player : Entity
         //check if player fell
         if (transform.position.y < GameManager.MinHeight)
         {
-            FindObjectOfType<HealthBar>().RemoveHealthPoints(lives);
+            GameManager.HealthBar.RemoveHealthPoints(lives);
             Kill();
         }
     }
 
     void Move(char dir)
     {
-        GetComponent<Rigidbody>().AddForce(dir == 'r' ? new Vector3(speed / (1 + timeHeld), 0, 0) : dir == 'l' ? new Vector3(-speed / (1 + timeHeld), 0, 0) : Vector3.zero);
+        transform.Translate(dir == 'r' ? new Vector3(speed * Time.deltaTime / (1 + timeHeld), 0, 0) : dir == 'l' ? new Vector3(-speed * Time.deltaTime / (1 + timeHeld), 0, 0) : Vector3.zero);
         //sap speed if input held
         timeHeld = 1/Mathf.Pow(timeHeld,Time.deltaTime * SPEED_LOSS_MULTIPLER);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void Hit()
     {
-        if (collision.gameObject.GetComponent<Spike>() != null)
-        {
-            lives--;
-            FindObjectOfType<HealthBar>().RemoveHealthPoints(1);
-            if (lives == 0)
-                Kill();
+        lives--;
+        GameManager.HealthBar.RemoveHealthPoints(1);
+        if (lives == 0)
+            Kill();
 
-            colTransition = 0;
-        }
+        colTransition = 0;
     }
 
     private void Kill()
