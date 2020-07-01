@@ -26,7 +26,7 @@ public class HealthBar : Entity
     {
         if (step == 0 || healthPoints.Count == 0)
             return;
-        healthPoints[0].AddComponent<Rigidbody>();
+        healthPoints[0].AddComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
         healthPoints.RemoveAt(0);
         RemoveHealthPoint((byte)(step - 1));
     }

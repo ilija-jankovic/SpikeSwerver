@@ -13,12 +13,13 @@ public static class GameManager
 
     public static readonly uint[] POINTS_TO_ADVANCE_LEVEL = { 10, 30, 80, 150, 400, 1000 };
 
+    //main level info
     public static readonly Tuple<string, float>[][] LEVEL_SPAWN_INFO =
-    { new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 1f) },
-      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.7f)},
-      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.7f), new Tuple<string, float>("HomingSpike", 2f)  },
-      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.7f), new Tuple<string, float>("HomingSpike", 0.5f)  },
-      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.4f), new Tuple<string, float>("HomingSpike", 0.5f)  }};
+    { new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 1f), new Tuple<string, float>("Collectable", 6f) },
+      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.7f), new Tuple<string, float>("Collectable", 6f)},
+      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.7f), new Tuple<string, float>("HomingSpike", 2f), new Tuple<string, float>("Collectable", 6f)  },
+      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.6f), new Tuple<string, float>("HomingSpike", 1f), new Tuple<string, float>("Collectable", 6f)  },
+      new Tuple<string, float>[]{ new Tuple<string, float>("BasicSpike", 0.4f), new Tuple<string, float>("HomingSpike", 1f), new Tuple<string, float>("Collectable", 6f)  }};
 
     private static GameObject _plat;
     private static Player _player;
@@ -26,7 +27,7 @@ public static class GameManager
     private static HealthBar _healthBar;
 
     private static GameObject spawnerSpawnLoc;
-    private static List<Spawner> spawners = new List<Spawner>();
+    private static List<GameObject> spawners = new List<GameObject>();
 
     [RuntimeInitializeOnLoadMethod]
     private static void Intitialise()
@@ -73,7 +74,7 @@ public static class GameManager
         if (level != oldLevel && !(level > LEVEL_SPAWN_INFO.Length))
         {
             //get rid of old spawners
-            foreach (Spawner spawner in spawners)
+            foreach (GameObject spawner in spawners)
                 UnityEngine.Object.Destroy(spawner);
             spawners.Clear();
 
@@ -87,6 +88,8 @@ public static class GameManager
                 Spawner spawnerComp = spawner.AddComponent<Spawner>();
                 spawnerComp.type = item.Item1;
                 spawnerComp.frequency = item.Item2;
+
+                spawners.Add(spawner);
             }
 
             //show level animation

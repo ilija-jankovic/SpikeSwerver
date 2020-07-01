@@ -12,18 +12,20 @@ public class Spawner : Entity
     private float time = -3f;
     private float nextSpawn;
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         time += Time.deltaTime;
         if(time >= nextSpawn)
         {
-            GameObject spike = Instantiate(Resources.Load(type) as GameObject);
+            GameObject obj = Instantiate(Resources.Load(type) as GameObject);
 
             GameObject plat = GameManager.Platform;
             Vector3 platPos = plat.transform.position;
             Vector3 platScl = plat.transform.localScale;
 
-            spike.transform.localPosition = new Vector3(Random.value*platScl.x*1.1f + platPos.x - platScl.x/2,0,0) + transform.position;
+            //spawn obj within platofrm boundries
+            obj.transform.localPosition = new Vector3(Random.value * platScl.x + platPos.x - platScl.x / 2, 0, 0) + transform.position;
 
             time = 0;
             nextSpawn = (Random.value + 0.5f) * frequency;

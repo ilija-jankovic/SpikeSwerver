@@ -25,13 +25,14 @@ public class Player : Entity
         mat = GetComponent<MeshRenderer>().sharedMaterial;
     }
 
-    protected override void Update()
+    protected override void FixedUpdate()
     {
+        base.FixedUpdate();
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 pos = touch.position;
-            Move(pos.x >= Screen.width / 2 ? 'r' : 'l');
+            Vector2 touchPos = touch.position;
+            Move(touchPos.x >= Screen.width / 2 ? 'r' : 'l');
         }
         /*else if (Input.GetMouseButton(0))
         {
@@ -53,11 +54,22 @@ public class Player : Entity
             GameManager.HealthBar.RemoveHealthPoints(lives);
             Kill();
         }
+
+        //lock player to platform
+        Vector3 pos = transform.position;
+        Vector3 scl = transform.localScale;
+        Vector3 platPos = GameManager.Platform.transform.position;
+        Vector3 platScl = GameManager.Platform.transform.localScale;
+        if (pos.x - scl.x / 2 < platPos.x - platScl.x / 2)
+            transform.position = new Vector3(platPos.x + (scl.x - platScl.x) / 2, pos.y, pos.z);
+        else if (pos.x + scl.x / 2 > platPos.x + platScl.x / 2)
+            transform.position = new Vector3(platPos.x + (platScl.x - scl.x) / 2, pos.y, pos.z);
     }
 
     void Move(char dir)
     {
-        transform.Translate(dir == 'r' ? new Vector3(speed * Time.deltaTime / (1 + timeHeld), 0, 0) : dir == 'l' ? new Vector3(-speed * Time.deltaTime / (1 + timeHeld), 0, 0) : Vector3.zero);
+        GetComponent<Rigidbody>().AddForce(dir == 'r' ? new Vector3(speed * Time.deltaTime / (1 + timeHeld), 0, 0) : dir == 'l' ? new Vector3(-speed * Time.deltaTime / (1 + timeHeld), 0, 0) : Vector3.zero);
+
         //sap speed if input held
         timeHeld = 1/Mathf.Pow(timeHeld,Time.deltaTime * SPEED_LOSS_MULTIPLER);
     }
