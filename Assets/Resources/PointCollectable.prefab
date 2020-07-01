@@ -46,10 +46,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _acceleration: 0.01
   type: 0
-  minCollectables: 5
-  maxCollectables: 15
+  minCollectables: 10
+  maxCollectables: 25
   cubeSize: 0.1
-  radius: 0.5
+  radius: 0.3
 --- !u!1 &2430131742070865089
 GameObject:
   m_ObjectHideFlags: 0
@@ -92,9 +92,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.97956115, b: 0, a: 1}
-  m_Intensity: 1
-  m_Range: 3
+  m_Color: {r: 1, g: 0.6744842, b: 0, a: 1}
+  m_Intensity: 2
+  m_Range: 1
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10

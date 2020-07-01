@@ -5,6 +5,8 @@ using GoogleMobileAds.Api;
 public class GoogleMobileAdsScript : MonoBehaviour
 {
     private BannerView bannerView;
+    public const int GAMES_BEFORE_FIRST_INTERSTITIAL = 3;
+    public const int GAMES_BETWEEN_INTERSTITALS = 10;
 
     public void Start()
     {
@@ -16,11 +18,11 @@ public class GoogleMobileAdsScript : MonoBehaviour
 
     private void RequestBanner()
     {
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         string adUnitId = "ca-app-pub-3940256099942544/6300978111";
-        #else
+#else
             string adUnitId = "unexpected_platform";
-        #endif
+#endif
 
         // Create a 320x50 banner at the top of the screen.
         this.bannerView = new BannerView(adUnitId, AdSize.Banner, AdPosition.Top);
@@ -47,6 +49,12 @@ public class GoogleMobileAdsScript : MonoBehaviour
     public void HandleOnAdLoaded(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleAdLoaded event received");
+        if (interstitial.IsLoaded())
+        {
+            interstitial.Show();
+        }
+        else
+            Debug.Log("Intersititial not loaded");
     }
 
     public void HandleOnAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
@@ -63,10 +71,42 @@ public class GoogleMobileAdsScript : MonoBehaviour
     public void HandleOnAdClosed(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleAdClosed event received");
+        if (interstitial != null)
+            interstitial.Destroy();
     }
 
     public void HandleOnAdLeavingApplication(object sender, EventArgs args)
     {
         MonoBehaviour.print("HandleAdLeavingApplication event received");
+    }
+
+    public InterstitialAd interstitial;
+
+    public void RequestInterstitial()
+    {
+        #if UNITY_ANDROID
+            string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+        #else
+            string adUnitId = "unexpected_platform";
+        #endif
+
+        // Initialize an InterstitialAd.
+        this.interstitial = new InterstitialAd(adUnitId);
+
+        // Called when an ad request has successfully loaded.
+        this.interstitial.OnAdLoaded += HandleOnAdLoaded;
+        // Called when an ad request failed to load.
+        this.interstitial.OnAdFailedToLoad += HandleOnAdFailedToLoad;
+        // Called when an ad is shown.
+        this.interstitial.OnAdOpening += HandleOnAdOpened;
+        // Called when the ad is closed.
+        this.interstitial.OnAdClosed += HandleOnAdClosed;
+        // Called when the ad click caused the user to leave the application.
+        this.interstitial.OnAdLeavingApplication += HandleOnAdLeavingApplication;
+
+        // Create an empty ad request.
+        AdRequest request = new AdRequest.Builder().Build();
+        // Load the interstitial with the request.
+        this.interstitial.LoadAd(request);
     }
 }

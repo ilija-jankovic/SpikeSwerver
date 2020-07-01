@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Collectable : FallingEntity
 {
-    public enum Types { points };
+    public enum Types { points, health };
     [SerializeField]
     byte type;
     [SerializeField]
     byte minCollectables;
     [SerializeField]
     byte maxCollectables;
-    [SerializeField]
-    float cubeSize;
     [SerializeField]
     float radius;
 
@@ -21,25 +19,21 @@ public class Collectable : FallingEntity
         base.Start();
         for (byte i = 0; i < Random.Range(minCollectables, maxCollectables); i++)
         {
-            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            cube.GetComponent<BoxCollider>().isTrigger = true;
-            cube.transform.SetParent(gameObject.transform);
-            cube.transform.localScale *= cubeSize;
-            cube.transform.localPosition = Random.insideUnitSphere*radius;
-
-            Material GetMaterial()
+            GameObject obj = null;
+            switch (type)
             {
-                switch (type)
-                {
-                    case (byte)Types.points:
-                        return Resources.Load("Materials/PointCollectable") as Material;
-                    default:
-                        return null;
-                }
+                case (byte)Types.points:
+                    obj = Instantiate(Resources.Load("PointCollectableParticle") as GameObject);
+                    break;
+                case (byte)Types.health:
+                    obj = Instantiate(Resources.Load("HealthCollectableParticle") as GameObject);
+                    break;
             }
-            cube.GetComponent<MeshRenderer>().sharedMaterial = GetMaterial();
-
-            cube.AddComponent<CubeCollectable>().type = type;
+            if (obj)
+            {
+                obj.transform.SetParent(gameObject.transform);
+                obj.transform.localPosition = Random.insideUnitSphere * radius;
+            }
         }
     }
 
@@ -55,7 +49,7 @@ public class Collectable : FallingEntity
             //enable collected behaviour in cube
             foreach (Transform cube in GetComponentInChildren<Transform>())
             {
-                CubeCollectable ccComp = cube.GetComponent<CubeCollectable>();
+                CollectableParticle ccComp = cube.GetComponent<CollectableParticle>();
                 if (ccComp)
                 {
                     ccComp.Collect();
@@ -63,7 +57,18 @@ public class Collectable : FallingEntity
                     ccComp.enabled = true;
                 }
             }
+
+            //add to health
+            if (type == (byte)Types.health)
+                GameManager.HealthBar.AddHealth();
+
             Destroy(gameObject);
         }
+    }
+
+    public override bool SpawnConditionsMet()
+    {
+        //only spawn health if player is below maxm health
+        return type != (byte)Types.health || GameManager.HealthBar.Health < GameManager.HealthBar.MaxHealth;
     }
 }

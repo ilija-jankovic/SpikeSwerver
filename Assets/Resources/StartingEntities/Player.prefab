@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6512020484849479217}
   - component: {fileID: 6512020484849479216}
   - component: {fileID: 6512020484849479223}
+  - component: {fileID: 5548461428903141887}
   - component: {fileID: 6512020484849479222}
   - component: {fileID: 6512020484849479221}
   - component: {fileID: 6512020484849479218}
@@ -82,6 +83,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &5548461428903141887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6512020484849479220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7605da1159b0e0b41a50ff697521cede, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  otherColour: {r: 1, g: 0, b: 0, a: 0}
+  transSpeed: 0.1
 --- !u!65 &6512020484849479222
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,7 +122,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fee87d420be78b44a93d600a159b28df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 400
+  speed: 600
 --- !u!54 &6512020484849479218
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -117,7 +132,7 @@ Rigidbody:
   m_GameObject: {fileID: 6512020484849479220}
   serializedVersion: 2
   m_Mass: 0.1
-  m_Drag: 3
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0

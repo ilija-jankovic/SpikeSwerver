@@ -11,9 +11,11 @@ public abstract class FallingEntity : Entity
     {
         base.Start();
         _acceleration *= Random.value + 0.5f;
+
         Rigidbody rb = gameObject.AddComponent<Rigidbody>();
         rb.AddForce(new Vector3(0, -Acceleration, 0), ForceMode.Acceleration);
         rb.interpolation = RigidbodyInterpolation.Interpolate;
+
         gameObject.AddComponent<BoxCollider>().isTrigger = true;
     }
 

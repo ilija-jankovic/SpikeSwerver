@@ -12,9 +12,19 @@ public abstract class Entity : MonoBehaviour
     protected virtual void FixedUpdate()
     {
         if (transform.position.y < GameManager.MinHeight)
-            Destroy(gameObject);
+            Remove(gameObject);
         foreach (Transform transform in GetComponentInChildren<Transform>())
             if (transform.position.y < GameManager.MinHeight)
-                Destroy(transform.gameObject);
+                Remove(transform.gameObject);
+    }
+
+    protected virtual void Remove(GameObject obj)
+    {
+        Destroy(obj);
+    }
+
+    public virtual bool SpawnConditionsMet()
+    {
+        return true;
     }
 }

@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeCollectable : Entity
+public class CollectableParticle : Entity
 {
+    [SerializeField]
     public byte type;
+    float speed;
     protected override void Start()
     {
         base.Start();
+        speed = Random.Range(0.2f, 0.8f);
     }
 
     // Update is called once per frame
     protected override void FixedUpdate()
     {
-        base.FixedUpdate();
         if (!Collected)
         {
-            transform.RotateAround(transform.parent.position, Vector3.up, Time.deltaTime * 300f);
+            transform.RotateAround(transform.parent.position, Vector3.up, Time.deltaTime * speed*450f);
             return;
         }
         switch (type)
@@ -26,15 +28,15 @@ public class CubeCollectable : Entity
                 Vector3 pointsTextPos = GameManager.PointsText.transform.position;
 
                 //move towards points text
-                transform.position = Vector3.MoveTowards(pos, pointsTextPos, 0.2f);
+                transform.position = Vector3.MoveTowards(pos, pointsTextPos, speed);
 
                 //check if close enough to points text
                 if (Vector3.Distance(pos, pointsTextPos) < 0.1f)
                 {
-                    Destroy(gameObject);
                     //add points if player still alive
                     if (GameManager.Player)
                         GameManager.AddPoints(1);
+                    Destroy(gameObject);
                 }
                 break;
             default:
@@ -45,7 +47,6 @@ public class CubeCollectable : Entity
 
     public void Collect()
     {
-        Destroy(GetComponent<BoxCollider>());
         transform.SetParent(null);
     }
 

@@ -7,9 +7,6 @@ public class Player : Entity
 {
     [SerializeField]
     private float speed = 0.03f;
-    private byte lives = 3;
-
-    Material mat;
 
     private readonly Color normalCol = Color.green;
     private readonly Color damagedCol = Color.red;
@@ -22,7 +19,6 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
-        mat = GetComponent<MeshRenderer>().sharedMaterial;
     }
 
     protected override void FixedUpdate()
@@ -45,13 +41,13 @@ public class Player : Entity
             //recover full speed if not holding
             timeHeld = Mathf.Max(timeHeld - Time.deltaTime * SPEED_RECOVERY_MULTIPLIER, 0);
 
-        mat.color = Color.Lerp(damagedCol, normalCol, colTransition);
-        colTransition = Mathf.Clamp(colTransition + 0.005f, 0, 1);
+        //mat.color = Color.Lerp(damagedCol, normalCol, colTransition);
+        //colTransition = Mathf.Clamp(colTransition + 0.005f, 0, 1);
 
         //check if player fell
         if (transform.position.y < GameManager.MinHeight)
         {
-            GameManager.HealthBar.RemoveHealthPoints(lives);
+            GameManager.HealthBar.RemoveHealthPoints(GameManager.HealthBar.Health);
             Kill();
         }
 
@@ -72,21 +68,26 @@ public class Player : Entity
 
         //sap speed if input held
         timeHeld = 1/Mathf.Pow(timeHeld,Time.deltaTime * SPEED_LOSS_MULTIPLER);
+
+        //disable help text
+        GameManager.DisableHelpText();
     }
 
     public void Hit()
     {
-        lives--;
         GameManager.HealthBar.RemoveHealthPoints(1);
-        if (lives == 0)
+        if (GameManager.HealthBar.Health == 0)
             Kill();
 
-        colTransition = 0;
+        Flash f = GetComponent<Flash>();
+        if(f) 
+            f.Go();
+        //colTransition = 0;
     }
 
     private void Kill()
     {
-        MenuManager.SwitchToMenu("EndScreen");
+        GameManager.EndGame();
         Destroy(gameObject);
     }
 }

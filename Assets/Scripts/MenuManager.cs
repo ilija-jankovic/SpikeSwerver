@@ -7,12 +7,16 @@ using UnityEngine.UI;
 public static class MenuManager
 {
     private static Canvas[] menus;
+    private static Button _restart;
+
     [RuntimeInitializeOnLoadMethod]
     private static void Initialise()
     {
         menus = UnityEngine.Object.FindObjectsOfType<Canvas>();
+        _restart = GameObject.Find("RestartButton").GetComponent<Button>();
+
         //reset game
-        GameObject.Find("RestartButton").GetComponent<Button>().onClick.AddListener(() => { 
+        Restart.onClick.AddListener(() => { 
             GameManager.Reset();
             CloseAllMenus();
         });
@@ -40,5 +44,10 @@ public static class MenuManager
     {
         foreach (Canvas canvas in menus)
             canvas.enabled = canvas.name == name ? true : false;
+    }
+
+    public static Button Restart
+    {
+        get { return _restart; }
     }
 }

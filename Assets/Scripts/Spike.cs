@@ -18,7 +18,11 @@ public abstract class Spike : FallingEntity
         base.FixedUpdate();
         if (!valueGiven && GameManager.Player && transform.position.y <= GameManager.Platform.transform.position.y)
         {
-            GameManager.AddPoints(value);
+            for(byte i = 0; i < value; i++)
+            {
+                GameObject cc = Instantiate(Resources.Load("PointCollectableParticle") as GameObject);
+                cc.transform.position = transform.position;
+            }
             valueGiven = true;
         }
     }
@@ -30,5 +34,13 @@ public abstract class Spike : FallingEntity
             GameManager.Player.Hit();
             Destroy(gameObject);
         }
+    }
+
+    protected override void Remove(GameObject obj)
+    {
+        Flash f = GameManager.Platform.GetComponent<Flash>();
+        if (f)
+            f.Go();
+        base.Remove(obj);
     }
 }

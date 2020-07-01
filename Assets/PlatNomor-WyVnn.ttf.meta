@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: cd5531b570dd7154793c8d6e871a1345
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Plat Nomor
+  fontNames:
+  - Plat Nomor
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 3522e8a47be2b714ca83e578016cbded, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
