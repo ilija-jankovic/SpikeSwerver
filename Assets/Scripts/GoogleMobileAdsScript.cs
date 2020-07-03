@@ -19,7 +19,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
     private void RequestBanner()
     {
 #if UNITY_ANDROID
-        string adUnitId = "ca-app-pub-3940256099942544/6300978111";
+        string adUnitId = "ca-app-pub-3126379316558386/5888247851";
 #else
             string adUnitId = "unexpected_platform";
 #endif
@@ -52,6 +52,9 @@ public class GoogleMobileAdsScript : MonoBehaviour
         if (interstitial.IsLoaded())
         {
             interstitial.Show();
+
+            //enable game new game button
+            MenuManager.Restart.enabled = true;
         }
         else
             Debug.Log("Intersititial not loaded");
@@ -61,6 +64,9 @@ public class GoogleMobileAdsScript : MonoBehaviour
     {
         MonoBehaviour.print("HandleFailedToReceiveAd event received with message: "
                             + args.Message);
+
+        //enable game new game button
+        MenuManager.Restart.enabled = true;
     }
 
     public void HandleOnAdOpened(object sender, EventArgs args)
@@ -85,7 +91,7 @@ public class GoogleMobileAdsScript : MonoBehaviour
     public void RequestInterstitial()
     {
         #if UNITY_ANDROID
-            string adUnitId = "ca-app-pub-3940256099942544/1033173712";
+            string adUnitId = "ca-app-pub-3126379316558386/3632553949";
         #else
             string adUnitId = "unexpected_platform";
         #endif
@@ -108,5 +114,8 @@ public class GoogleMobileAdsScript : MonoBehaviour
         AdRequest request = new AdRequest.Builder().Build();
         // Load the interstitial with the request.
         this.interstitial.LoadAd(request);
+
+        //disable game reset button to ensure ad does not cover an active game
+        MenuManager.Restart.enabled = false;
     }
 }

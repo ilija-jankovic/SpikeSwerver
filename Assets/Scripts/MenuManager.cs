@@ -9,6 +9,8 @@ public static class MenuManager
     private static Canvas[] menus;
     private static Button _restart;
 
+    public static bool helpDisplayDisabled;
+
     [RuntimeInitializeOnLoadMethod]
     private static void Initialise()
     {
@@ -25,14 +27,31 @@ public static class MenuManager
             canvas.enabled = false;
     }
 
-    public static void OpenMenu(string name)
+    public static Canvas FindMenu(string name)
     {
         foreach (Canvas canvas in menus)
             if (canvas.name == name)
-            {
-                canvas.enabled = true;
-                return;
-            }
+                return canvas;
+        return null;
+    }
+
+    public static void OpenMenu(string name)
+    {
+        FindMenu(name).enabled = true;
+    }
+
+    public static void FadeInMenu(string name)
+    {
+        FadeUI f = FindMenu(name).GetComponent<FadeUI>();
+        if (f)
+            f.FadeIn();
+    }
+
+    public static void FadeOutMenu(string name)
+    {
+        FadeUI f = FindMenu(name).GetComponent<FadeUI>();
+        if (f)
+            f.FadeOut();
     }
 
     public static void CloseAllMenus()

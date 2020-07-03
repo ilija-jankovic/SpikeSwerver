@@ -19,6 +19,8 @@ public class Player : Entity
     protected override void Start()
     {
         base.Start();
+        if (!MenuManager.helpDisplayDisabled)
+            MenuManager.OpenMenu("HelpScreen");
     }
 
     protected override void FixedUpdate()
@@ -50,7 +52,10 @@ public class Player : Entity
             GameManager.HealthBar.RemoveHealthPoints(GameManager.HealthBar.Health);
             Kill();
         }
+    }
 
+    void Update()
+    {
         //lock player to platform
         Vector3 pos = transform.position;
         Vector3 scl = transform.localScale;
@@ -70,7 +75,11 @@ public class Player : Entity
         timeHeld = 1/Mathf.Pow(timeHeld,Time.deltaTime * SPEED_LOSS_MULTIPLER);
 
         //disable help text
-        GameManager.DisableHelpText();
+        if (!MenuManager.helpDisplayDisabled)
+        {
+            MenuManager.FadeOutMenu("HelpScreen");
+            MenuManager.helpDisplayDisabled = true;
+        }
     }
 
     public void Hit()

@@ -31,7 +31,6 @@ public static class GameManager
 
     private static HighScorePanel highScorePanel;
     private static GameObject background;
-    private static TMPro.TextMeshPro helpText;
     private static GoogleMobileAdsScript googleAds;
 
     private static GameObject spawnerSpawnLoc;
@@ -50,7 +49,6 @@ public static class GameManager
 
         highScorePanel = GameObject.FindObjectOfType<HighScorePanel>();
         background = GameObject.Find("Background");
-        helpText = GameObject.Find("HelpText").GetComponent<TMPro.TextMeshPro>();
         googleAds = GameObject.Find("GoogleAds").GetComponent<GoogleMobileAdsScript>();
 
         spawnerSpawnLoc = GameObject.Find("Spawners");
@@ -133,7 +131,7 @@ public static class GameManager
 
     public static void EndGame()
     {
-        MenuManager.SwitchToMenu("EndScreen");
+        MenuManager.FadeInMenu("EndScreen");
 
         //update highscore
         if (points > HighScore)
@@ -145,11 +143,6 @@ public static class GameManager
         //show interstitials every interval with an offset of a number of games played
         if ((GoogleMobileAdsScript.GAMES_BETWEEN_INTERSTITALS + gamesPlayed - GoogleMobileAdsScript.GAMES_BEFORE_FIRST_INTERSTITIAL) % GoogleMobileAdsScript.GAMES_BETWEEN_INTERSTITALS == 0)
             googleAds.RequestInterstitial();
-    }
-
-    public static void DisableHelpText()
-    {
-        helpText.enabled = false;
     }
 
     public static byte Level
